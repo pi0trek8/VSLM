@@ -41,12 +41,75 @@ def diffrence_broadcast(mask):
             result += "."
     return result
 
+def calculate_broadcast(net_address, diffrence_broadcast):
+    result = [int(oct) for oct in net_address.split(".")]
+    diffrences = [int(oct) for oct in diffrence_broadcast.split(".")]
+
+    for i in range(4):
+        result[i] += diffrences[i]
+    
+    broadcast = ''
+    for i in range(4):
+        broadcast += str(result[i])
+        if(i != 3):
+            broadcast += "."
+        
+    return broadcast
+
+
+def calculate_first_address(net_address):
+    octs = [int(oct) for oct in net_address.split(".")]
+    if(octs[3] < 255):
+        octs[3] += 1
+    else:
+        octs[3] = 0
+        octs[2] += 1
+    
+    first_add = ''
+    i = 0
+    for oct in octs:
+        first_add += str(oct)
+        if(i != 3):
+            first_add += "."
+        i += 1
+
+    return first_add
+
+
+
+def calculate_last_address(broadcast):
+    octs = [int(oct) for oct in broadcast.split(".")]
+    if(octs[3] > 0):
+        octs[3] -= 1
+    else:
+        octs[3] = 255
+        octs[2] -= 1
+    
+    add = ''
+    i = 0
+    for oct in octs:
+        add += str(oct)
+        if(i != 3):
+            add += "."
+        i += 1
+
+    return add
 
 num_device = int(sys.argv[1])
-print("Urzadzenia: " + sys.argv[1])
+net_address = sys.argv[2]
+print("Potrzebne urządzenia: " + sys.argv[1])
 mask = find_mask(num_device)
-print("max urzadznia: " + str(2**(32-mask) - 2))
+print("Urzadzenia w masce: " + str(2**(32-mask) - 2))
 print("Maska: " + str(mask))
 mask_decimal = calculate_mask_decimal(mask)
-print("Maska dziesietnieL " + mask_decimal)
-print("Broadcast do dodania: " + diffrence_broadcast(mask_decimal))
+print("Maska dziesietnie: " + mask_decimal)
+
+diff_br = diffrence_broadcast(mask_decimal)
+brodcast = calculate_broadcast(net_address, diffrence_broadcast=diff_br)
+
+
+print("Broadcast: " + brodcast)
+
+print("pierwszy adres: " + calculate_first_address(net_address))
+
+print("ostatni adres: " + calculate_last_address(brodcast))
