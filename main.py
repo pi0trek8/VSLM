@@ -2,13 +2,13 @@ import sys
 
 def find_mask(num_device):
     for i in range(30, 10, -1):
-        if (2**(32-i)-2) > num_device:
+        if (2**(32-i)-2) >= num_device:
             break
     return i 
     
 
 def calculate_mask_decimal(mask: int):
-    result = '';
+    result = ''
     rest = mask % 8
     num = mask // 8
     for i in range(num):
